@@ -7,6 +7,8 @@ from .base_scene import BaseScene
 from game.managers.progress_manager import ProgressManager
 from config.keys import MOVE_LEFT_KEYS, MOVE_RIGHT_KEYS, MOVE_UP_KEYS, MOVE_DOWN_KEYS
 
+fullfontpath = resource_path(FONT_PATH)
+
 class StageSelectScene(BaseScene):
     def __init__(self, screen, sound_manager, current_world=1, current_stage=1):
         super().__init__(screen, sound_manager)
@@ -48,10 +50,10 @@ class StageSelectScene(BaseScene):
         self.stage_area_margin = int(SCREEN_HEIGHT * 0.25)
         
         # フォント設定
-        self.title_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.13))
-        self.stage_font = pygame.font.Font(FONT_PATH, int(self.stage_size * 0.45))
-        self.guide_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.05))
-        self.sound_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.03))
+        self.title_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.13))
+        self.stage_font = pygame.font.Font(fullfontpath, int(self.stage_size * 0.45))
+        self.guide_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.05))
+        self.sound_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.03))
         
         # 選択状態の初期化
         self.selected_world = current_world
@@ -92,7 +94,7 @@ class StageSelectScene(BaseScene):
         if (self.selected_world == 3 and self.selected_stage in [1, 2, 3]) \
             or (self.selected_world == 4 and self.selected_stage == 1):
 
-            warning_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.05))
+            warning_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.05))
             warning_surf = warning_font.render("すりぬけ禁止", True, (255, 100, 100))  # 薄めの赤
             warning_rect = warning_surf.get_rect(
                 left=SCREEN_WIDTH * 0.1,
@@ -126,7 +128,7 @@ class StageSelectScene(BaseScene):
 
         if (self.selected_world == 3 and self.selected_stage in [1, 2, 3])\
             or (self.selected_world == 4 and self.selected_stage == 1):
-            warning_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.05))
+            warning_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.05))
             warning_surf = warning_font.render("すりぬけ禁止", True, (255, 100, 100))
             warning_rect = warning_surf.get_rect(
                 left=SCREEN_WIDTH * 0.1,

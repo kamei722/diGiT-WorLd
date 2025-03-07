@@ -5,7 +5,7 @@ import os
 import math
 import random
 from datetime import datetime
-from game.game_utils import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH
+from game.game_utils import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH,resource_path
 from .base_scene import BaseScene
 from game.objects.digit import Digit
 from game.objects.player import Player
@@ -103,7 +103,8 @@ class TitleScene(BaseScene):
         self.player = Player(x=player_start_x, y=player_start_y, sound_manager=sound_manager)
         
         # ガイドテキスト ("Press ENTER to Start")
-        self.guide_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.03))
+        fullfontpath = resource_path(FONT_PATH)
+        self.guide_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.03))
         self.enter_blink_timer = 0.0
         
         # Sound Toggle Button (画面左上)

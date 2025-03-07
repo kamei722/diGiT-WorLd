@@ -3,11 +3,13 @@ import pygame
 import os
 import re
 import math
-from game.game_utils import SCREEN_WIDTH, SCREEN_HEIGHT, FPS,FONT_PATH, STAGE_CLEAR_DISPLAY_TIME
+from game.game_utils import SCREEN_WIDTH, SCREEN_HEIGHT, FPS,FONT_PATH, STAGE_CLEAR_DISPLAY_TIME,resource_path
 from .base_scene import BaseScene
 from game.objects.player import Player
 from game.managers.stagemanager import StageManager
 from game.managers.progress_manager import ProgressManager
+
+fullfontpath = resource_path(FONT_PATH)
 
 class KeyStreak:
     def __init__(self, x, y):
@@ -54,14 +56,13 @@ class GameScene(BaseScene):
 
         self.world = 1
         self.stage = 1
-        
-        self.font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.04))
+        self.font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.04))
 
         self.show_tutorial = False
         if re.search(r"stage1-1\.json$", stage_file):
             self.show_tutorial = True
             # チュートリアル表示用フォント
-            self.tutorial_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.035))
+            self.tutorial_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.035))
 
             import os
             key_image_path = os.path.join(os.path.dirname(__file__), "..", "..", "assets", "pics", "key.png")
@@ -264,7 +265,7 @@ class GameScene(BaseScene):
 
                 if self.stage_manager.final_stage and self.world == 4 and self.stage == 3:
                     base_font_size = int(SCREEN_HEIGHT * 0.2)  # 通常より大きいフォントサイズ
-                    clear_font = pygame.font.Font(FONT_PATH, base_font_size)
+                    clear_font = pygame.font.Font(fullfontpath, base_font_size)
                     # 明るい赤 + 暗い赤
                     clear_text = clear_font.render("Game Cleared!", True, (255, 80, 80))
                     clear_rect = clear_text.get_rect(center=(SCREEN_WIDTH // 2 + shake_offset, SCREEN_HEIGHT // 2 + shake_offset))
@@ -275,7 +276,7 @@ class GameScene(BaseScene):
                     self.screen.blit(clear_text, clear_rect)
             else:
                 # 通常のステージクリア表示
-                clear_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.15))
+                clear_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.15))
                 clear_text = clear_font.render("Stage Cleared!", True, (200, 200, 0))
                 
                 # 黄色　+ 暗い黄色
@@ -290,7 +291,7 @@ class GameScene(BaseScene):
 
          # 操作方法描画
         if self.show_tutorial:
-            mission_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.05))
+            mission_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.05))
             mission_text = mission_font.render("カギをのがすな!!", True, (255, 255, 255))
             top_margin_x = int(SCREEN_WIDTH * 0.05)
             top_margin_y = int(SCREEN_HEIGHT * 0.05)
@@ -306,7 +307,7 @@ class GameScene(BaseScene):
                 "Esc : 戻る"
                 
             ]
-            t_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.03))
+            t_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.03))
 
             bottom_margin_x = int(SCREEN_WIDTH * 0.05)
             bottom_margin_y = int(SCREEN_HEIGHT * 0.05)
@@ -362,7 +363,7 @@ class GameScene(BaseScene):
         display_duration = 5000 
 
         if elapsed < display_duration:
-            peak_font = pygame.font.Font(FONT_PATH, int(SCREEN_HEIGHT * 0.1))
+            peak_font = pygame.font.Font(fullfontpath, int(SCREEN_HEIGHT * 0.1))
             text_surf = peak_font.render("頂点を目指せ！！", True, (255, 255, 0))
             text_rect = text_surf.get_rect(
                 center=(SCREEN_WIDTH // 2, int(SCREEN_HEIGHT * 0.1))

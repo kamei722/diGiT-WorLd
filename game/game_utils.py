@@ -29,4 +29,4 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-FONT_PATH = resource_path("assets/fonts/DotGothic16-Regular.ttf")
+FONT_PATH = "assets/fonts/DotGothic16-Regular.ttf"
