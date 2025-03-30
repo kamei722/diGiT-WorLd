@@ -52,7 +52,7 @@ class StageManager:
 
     def load_stage(self, stage_path):
         try:
-            with open(stage_path, 'r') as f:
+            with open(stage_path, 'r', encoding='utf-8') as f:
                 self.stage_data = json.load(f)
 
             reference = self.stage_data.get("screen_reference", {"width": 800, "height": 600})
@@ -117,7 +117,6 @@ class StageManager:
             if self.final_stage:
                 self.digit_activation_threshold = float(self.stage_data.get("digit_activation_threshold")) * self.scale_y
                 self.digit_removal_threshold = float(self.stage_data.get("digit_removal_threshold")) * self.scale_y
-
 
             digits_data = self.stage_data.get("digits", [])
             for d_info in digits_data:
@@ -192,7 +191,6 @@ class StageManager:
         self.current_loop = 1
         self.consecutive_keys = 0
         
-
         self.groupB_activated = False
         self.groupA_removed = False
         self.digits = copy.deepcopy(self.original_digits)
@@ -207,7 +205,6 @@ class StageManager:
             key_info["spawned"] = False
             key_info["spawn_time"] = None
         self.active_keys.clear()
-
 
     def new_game_reset(self):
         self.reset()
