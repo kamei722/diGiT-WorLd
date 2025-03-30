@@ -31,7 +31,7 @@ class ProgressManager:
     def load_progress(self):
         """進行状況を読み込む"""
         try:
-            with open(self.save_path, 'r') as f:
+            with open(self.save_path, 'r', encoding='utf-8') as f:
                 self.progress = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError):
             self.progress = copy.deepcopy(self.default_progress)
@@ -39,7 +39,7 @@ class ProgressManager:
 
     def save_progress(self):
         """進行状況を保存する"""
-        with open(self.save_path, 'w') as f:
+        with open(self.save_path, 'w', encoding='utf-8') as f:
             json.dump(self.progress, f, indent=2)
 
     def is_stage_unlocked(self, world, stage):
