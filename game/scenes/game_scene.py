@@ -1,5 +1,4 @@
-
-        # game/scenes/game_scene.py
+# game/scenes/game_scene.py
 import pygame
 import os
 import re
