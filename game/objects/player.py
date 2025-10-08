@@ -44,9 +44,9 @@ class Player:
     def get_rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
 
-    def collect_key(self):
+    def collect_key(self, play_sound: bool = True):
         self.key_count += 1
-        if self.sound_manager:
+        if play_sound and self.sound_manager:
             self.sound_manager.play("pickup")
 
     def update(self, dt, keys, digits, space_pressed_this_frame, items=None, stage_manager=None):
@@ -142,7 +142,11 @@ class Player:
                             # 鍵であれば collect_key() も実行
                             from game.objects.item import Key
                             if isinstance(item, Key):
-                                self.collect_key()
+                                play_sound = (
+                                    stage_manager is None
+                                    or getattr(stage_manager, "sound_manager", None) is None
+                                )
+                                self.collect_key(play_sound=play_sound)
 
         # 敵との衝突(もしあれば)
         # if stage_manager and stage_manager.active_enemies:
