@@ -1,8 +1,6 @@
 # game/scenes/title_scene.py
 
 import pygame
-import os
-import math
 import random
 from datetime import datetime
 from game.game_utils import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH,resource_path
@@ -74,6 +72,34 @@ class TitleScene(BaseScene):
                 'y_offset': w_y_offset
             }
         }
+
+        self.overlay_digits = []
+        for i, digit in enumerate(self.title1_digits):
+            ch = self.title_line1[i].upper()
+            if ch in self.overlay_config_top:
+                conf = self.overlay_config_top[ch]
+                self.overlay_digits.append(
+                    Digit(
+                        x=digit.x + conf.get('x_offset', 0),
+                        y=digit.y + conf.get('y_offset', 0),
+                        width=digit.width,
+                        height=digit.height,
+                        number=conf.get('overlay_char')
+                    )
+                )
+        for i, digit in enumerate(self.title2_digits):
+            ch = self.title_line2[i].upper()
+            if ch in self.overlay_config_bottom:
+                conf = self.overlay_config_bottom[ch]
+                self.overlay_digits.append(
+                    Digit(
+                        x=digit.x + conf.get('x_offset', 0),
+                        y=digit.y + conf.get('y_offset', 0),
+                        width=digit.width,
+                        height=digit.height,
+                        number=conf.get('overlay_char')
+                    )
+                )
         
         # 時計表示用 (右上): HH:MM
         clock_digit_width  = int( 90 * scale_w)
@@ -100,6 +126,7 @@ class TitleScene(BaseScene):
         # Player配置
         player_start_x = SCREEN_WIDTH // 2 - int(20 * scale_w)
         player_start_y = int(SCREEN_HEIGHT * 0.2)
+        self.player_start = (player_start_x, player_start_y)
         self.player = Player(x=player_start_x, y=player_start_y, sound_manager=sound_manager)
         
         # ガイドテキスト ("Press ENTER to Start")
@@ -114,6 +141,10 @@ class TitleScene(BaseScene):
         button_h = int( 50 * scale_h)
         self.sound_toggle_button = pygame.Rect(button_x, button_y, button_w, button_h)
         self.sound_button_pressed = False
+
+        self.platform_digits = (
+            self.title1_digits + self.title2_digits + self.clock_digits + self.overlay_digits
+        )
 
         # タイトル画面用のキー　　(3つのランダムパターン)
         pattern1 = [(0.22, 0.2), (0.48, 0.65), (0.9, 0.23)]
@@ -131,8 +162,7 @@ class TitleScene(BaseScene):
 
     def _reset_player(self):
         """プレイヤーが落下した場合に初期位置に戻す"""
-        player_start_x = SCREEN_WIDTH // 2 - 20
-        player_start_y = int(SCREEN_HEIGHT * 0.2)
+        player_start_x, player_start_y = self.player_start
         self.player.x = player_start_x
         self.player.y = player_start_y
         self.player.velocity_y = 0
@@ -144,6 +174,8 @@ class TitleScene(BaseScene):
         for d in self.title2_digits:
             d.update(dt)
         for d in self.clock_digits:
+            d.update(dt)
+        for d in self.overlay_digits:
             d.update(dt)
         
         # 時計の更新
@@ -159,34 +191,7 @@ class TitleScene(BaseScene):
         if self.enter_blink_timer > 1.0:
             self.enter_blink_timer = 0.0
         
-        # 足場
-        platforms = self.title1_digits + self.title2_digits + self.clock_digits
-
-        # 調整用Digit
-        for i, d in enumerate(self.title1_digits):
-            ch = self.title_line1[i].upper()
-            if ch in self.overlay_config_top:
-                conf = self.overlay_config_top[ch]
-                overlay = Digit(
-                    x = d.x + conf.get('x_offset', 0),
-                    y = d.y + conf.get('y_offset', 0),
-                    width = d.width,
-                    height = d.height,
-                    number = conf.get('overlay_char')
-                )
-                platforms.append(overlay)
-        for i, d in enumerate(self.title2_digits):
-            ch = self.title_line2[i].upper()
-            if ch in self.overlay_config_bottom:
-                conf = self.overlay_config_bottom[ch]
-                overlay = Digit(
-                    x = d.x + conf.get('x_offset', 0),
-                    y = d.y + conf.get('y_offset', 0),
-                    width = d.width,
-                    height = d.height,
-                    number = conf.get('overlay_char')
-                )
-                platforms.append(overlay)
+        platforms = self.platform_digits
         
         # プレイヤー更新
         keys = pygame.key.get_pressed()
@@ -221,33 +226,14 @@ class TitleScene(BaseScene):
     def draw(self):
         self.screen.fill((0, 0, 0))
         #digit描画
-        for i, d in enumerate(self.title1_digits):
-            d.draw(self.screen)
-            ch = self.title_line1[i].upper()
-            if ch in self.overlay_config_top:
-                conf = self.overlay_config_top[ch]
-                overlay = Digit(
-                    x = d.x + conf.get('x_offset', 0),
-                    y = d.y + conf.get('y_offset', 0),
-                    width = d.width,
-                    height = d.height,
-                    number = conf.get('overlay_char')
-                )
-                overlay.draw(self.screen)
+        for digit in self.title1_digits:
+            digit.draw(self.screen)
 
-        for i, d in enumerate(self.title2_digits):
-            d.draw(self.screen)
-            ch = self.title_line2[i].upper()
-            if ch in self.overlay_config_bottom:
-                conf = self.overlay_config_bottom[ch]
-                overlay = Digit(
-                    x = d.x + conf.get('x_offset', 0),
-                    y = d.y + conf.get('y_offset', 0),
-                    width = d.width,
-                    height = d.height,
-                    number = conf.get('overlay_char')
-                )
-                overlay.draw(self.screen)
+        for digit in self.title2_digits:
+            digit.draw(self.screen)
+
+        for overlay in self.overlay_digits:
+            overlay.draw(self.screen)
 
         # 時計の描画
         for d in self.clock_digits:
